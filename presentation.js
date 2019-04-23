@@ -20,10 +20,8 @@ var start = () => {
         if (saisie == 1) {
             rl.question('Saisissez le nom à rechercher : ', saisieNom => {
                 console.log(`>> Recherche en cours du nom ${saisieNom}`);
-                service.searchByName(saisieNom, (listeCollegue) => {
-                    listeCollegue.forEach(collegue => {
-                        console.log(`${collegue.nom } ${collegue.prenoms } (${collegue.dateDeNaissance})`);
-                    });
+                service.searchByName(saisieNom, (collegue) => {
+                    console.log(`${collegue.nom } ${collegue.prenoms } (${collegue.dateDeNaissance})`);
                 });
                 start();
             });
