@@ -1,9 +1,10 @@
 var readline = require('readline');
+var service = require('./service.js');
 
-    var rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
 var start = () => {
     console.log("1. Rechercher un collègue par nom");
@@ -11,13 +12,21 @@ var start = () => {
 
     rl.question('', function (saisie) {
 
-        // la variable `saisie` contient la saisie effectuée
-        var choix = saisie;
+        console.log(`Votre choix : ${saisie}`);
 
-        if (choix == 1) {
-            console.log(">> Recherche en cours du nom xxx");
-            start();
-        } else if (choix == 99) {
+        if (saisie == 1) {
+            rl.question('Saisissez le nom à rechercher : ', saisieNom => {
+                console.log(`>> Recherche en cours du nom ${saisieNom}`);
+                service.searchByName(saisieNom, (listeMatricule) => {
+                    listeMatricule.forEach(element => {
+                        service.searchByMatricule(element, (collegue) => {
+                            console.log(`${collegue.nom } ${collegue.prenoms } (${collegue.dateDeNaissance})`);
+                        });
+                    });
+                    start();
+                });
+            });
+        } else if (saisie == 99) {
             console.log("Aurevoir");
             rl.close();
         }
