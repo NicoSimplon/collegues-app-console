@@ -5,11 +5,19 @@ function rechercherColleguesParNom(nomRecherche, callback) {
     request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true }, function (err, res, body) {
 
         var tableauColleguesTrouves = body;
-        
+        var tableauCollegue = [];
+
         tableauColleguesTrouves.forEach(matricule => {
+
             rechercherColleguesParMatricule(matricule, (collegueTrouve) => {
-                callback(collegueTrouve);
+                tableauCollegue.push(collegueTrouve);
+
+                if (tableauCollegue.length == tableauColleguesTrouves.length) {
+                    callback(tableauCollegue);
+                }
+
             });
+            
         });
 
     });
@@ -25,16 +33,12 @@ function rechercherColleguesParMatricule(matricule, callback) {
     });
 }
 
-function creerUnCollegue(collegue, callback) {
+function creerUnCollegue(collegue) {
     request({
-        uri: `https://nicolas-collegues-api.herokuapp.com/collegues`,
+        url: `https://nicolas-collegues-api.herokuapp.com/collegues`,
         method: 'POST',
-        headers: [
-            {
-              name: 'content-type',
-              value: 'json'
-            }
-        ],
+        json: true,
+        body: collegue,
     });
 }
 
