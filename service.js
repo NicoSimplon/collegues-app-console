@@ -56,12 +56,36 @@ function rechercherColleguesParMatricule(matricule, callback) {
     });
 }
 
-function creerUnCollegue(collegue) {
-    request({
-        url: `https://nicolas-collegues-api.herokuapp.com/collegues`,
-        method: 'POST',
-        json: true,
-        body: collegue,
+function creerUnCollegue(collegue, callbackOK, callbackKO) {
+
+    request(
+        {
+            url: `https://nicolas-collegues-api.herokuapp.com/collegues`,
+            method: 'POST',
+            json: true,
+            body: collegue,
+        }, 
+        (err, res, body) => {
+
+        if (err) {
+
+            callbackKO('Serveur indisponible');
+    
+        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
+    
+            callbackKO('Erreur dans les informations de la requête');
+    
+        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
+    
+            callbackKO('Erreur côté serveur');
+    
+        } else {
+        
+            var collegueCree = body;
+            callbackOK(collegueCree);
+
+        }
+
     });
 }
 

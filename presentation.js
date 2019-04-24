@@ -40,25 +40,49 @@ var start = () => {
 
         } else if (saisie == 2) {
 
-            var collegue = {
-                nom: "Marty",
-                prenoms: "Grégory",
-                dateDeNaissance: "1987-12-09",
-                photoUrl: "http://img.jpg",
-                email: "mail@mail.com"
-            }
+            var collegue = {};
 
-            rl.question('Voulez-vous créer un nouveau collègue ? ', saisiReponse => {
-                console.log(`${saisiReponse}`);
-                service.creerCollegue(collegue);
-                start();
+            rl.question('Saisissez le nom du nouveau collègue : ', nomSaisi => {
+                collegue.nom = nomSaisi;
+
+                rl.question('Saisissez le prénom du nouveau collègue : ', prenomSaisi => {
+                    collegue.prenoms = prenomSaisi;
+
+                    rl.question('Saisissez la date de naissance du nouveau collègue (ex: 1988-03-15) : ', dateSaisi => {
+                        collegue.dateDeNaissance = dateSaisi;
+
+                        rl.question('Saisissez l\'url de la photo du nouveau collègue (ex: http://img.jpg) : ', urlSaisi => {
+                            collegue.photoUrl = urlSaisi;
+
+                            rl.question('Saisissez l\'email du nouveau collègue (ex: mail@mail.com) : ', emailSaisi => {
+                                collegue.email = emailSaisi;
+                                
+                                service.creerCollegue(collegue,
+                                    (collegueRecup) => {
+                                        console.log("Votre collègue a bien été créé:");
+                                        console.log(collegueRecup);
+                                        start();
+                                    },
+                                    (messageErr) => {
+
+                                        console.log('OOps :', messageErr);
+                    
+                                        start();
+                    
+                                    }  
+                                );
+
+                            });
+                        });
+                    });
+                });
             });
 
         } else if (saisie == 99) {
 
             console.log("Aurevoir");
             rl.close();
-            
+
         }
 
     });
