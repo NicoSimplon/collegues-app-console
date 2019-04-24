@@ -23,7 +23,7 @@ var start = () => {
                 service.searchByName(saisieNom, (tableauCollegue) => {
 
                     tableauCollegue.forEach(collegue => {
-                        console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance})`);
+                        console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance}) => matricule: ${collegue.matricule}`);
                     });
 
                     start();
@@ -76,6 +76,62 @@ var start = () => {
                         });
                     });
                 });
+            });
+
+        } else if (saisie == 3) {
+
+            var matricule = {};
+            var email = {};
+
+            rl.question('Saisissez le matricule du collègue à modifier : ', matriculeSaisi => {
+                matricule.matricule = matriculeSaisi;
+
+                rl.question('Saisissez le nouvel email du collègue : ', emailSaisi => {
+                    email.email = emailSaisi;
+
+                    service.modifEmail(matricule.matricule, email, (collegueModifie) => {
+                        console.log("Votre email a bien été modifié:");
+                        console.log(collegueModifie);
+                        start();
+                    },
+                    (messageErr) => {
+
+                        console.log('OOps :', messageErr);
+    
+                        start();
+    
+                    });
+
+                });
+
+            });
+
+        } else if (saisie == 4) {
+
+            var matricule = {};
+            var url = {};
+
+            rl.question('Saisissez le matricule du collègue à modifier : ', matriculeSaisi => {
+                matricule.matricule = matriculeSaisi;
+
+                rl.question('Saisissez le nouvel url de la photo du collègue : ', urlSaisi => {
+                    url.photoUrl = urlSaisi;
+
+                    service.modifPhoto(matricule.matricule, url, (collegueModifie) => {
+                        console.log("Votre photo a bien été modifié:");
+                        console.log(collegueModifie);
+                        start();
+                    },
+                    (messageErr) => {
+
+                        console.log('OOps :', messageErr);
+    
+                        start();
+    
+                    });
+
+                });
+
             });
 
         } else if (saisie == 99) {

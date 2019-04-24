@@ -89,6 +89,72 @@ function creerUnCollegue(collegue, callbackOK, callbackKO) {
     });
 }
 
+function modifierEmailCollegue(matricule, email, callbackOK, callbackKO) {
+    request(
+        {
+            url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
+            method: 'PATCH',
+            json: true,
+            body: email,
+        }, 
+        (err, res, body) => {
+
+        if (err) {
+
+            callbackKO('Serveur indisponible');
+    
+        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
+    
+            callbackKO('Erreur dans les informations de la requête');
+    
+        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
+    
+            callbackKO('Erreur côté serveur');
+    
+        } else {
+        
+            var collegueModifie = body;
+            callbackOK(collegueModifie);
+
+        }
+
+    });
+}
+
+function modifierPhotoUrlCollegue(matricule, url, callbackOK, callbackKO) {
+    request(
+        {
+            url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
+            method: 'PATCH',
+            json: true,
+            body: url,
+        }, 
+        (err, res, body) => {
+
+        if (err) {
+
+            callbackKO('Serveur indisponible');
+    
+        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
+    
+            callbackKO('Erreur dans les informations de la requête');
+    
+        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
+    
+            callbackKO('Erreur côté serveur');
+    
+        } else {
+        
+            var collegueModifie = body;
+            callbackOK(collegueModifie);
+
+        }
+
+    });
+}
+
 exports.searchByName = rechercherColleguesParNom;
 exports.creerCollegue = creerUnCollegue;
+exports.modifEmail = modifierEmailCollegue;
+exports.modifPhoto = modifierPhotoUrlCollegue;
 
