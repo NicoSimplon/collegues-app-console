@@ -1,31 +1,54 @@
 var request = require('request');
 
-function rechercherColleguesParNom(nomRecherche, callback) {
+function rechercherColleguesParNom(nomRecherche, callbackOK, callbackKO) {
 
-    request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true }, function (err, res, body) {
+    request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true }, (err, res, body) => {
 
-        var tableauColleguesTrouves = body;
-        var tableauCollegue = [];
+        if (err) {
 
-        tableauColleguesTrouves.forEach(matricule => {
+            callbackKO('Serveur indisponible');
 
-            rechercherColleguesParMatricule(matricule, (collegueTrouve) => {
-                tableauCollegue.push(collegueTrouve);
+        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
 
-                if (tableauCollegue.length == tableauColleguesTrouves.length) {
-                    callback(tableauCollegue);
+            callbackKO('Erreur dans les informations de la requête');
+
+        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
+
+            callbackKO('Erreur côté serveur');
+
+        } else {
+
+            var tableauMatriculesTrouves = body;
+
+            var trouverCollegue = (tabMats, tabResultats) => {
+
+                if (tabMats.length === 0) {
+                    callbackOK([]);
                 }
 
-            });
-            
-        });
+                var matricule = tabMats.pop();
 
+                rechercherColleguesParMatricule(matricule, (collegueTrouve) => {
+                    tabResultats.push(collegueTrouve);
+
+                    if (tabMats.length > 0) {
+                        trouverCollegue(tabMats, tabResultats);
+                    } else {
+                        callbackOK(tabResultats);
+                    }
+                });
+
+            }
+
+            trouverCollegue(tableauMatriculesTrouves, []);
+
+        }
     });
 }
 
 function rechercherColleguesParMatricule(matricule, callback) {
 
-    request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true }, function (err, res, body) {
+    request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true }, (err, res, body) => {
 
         var colleguesTrouve = body;
         callback(colleguesTrouve);

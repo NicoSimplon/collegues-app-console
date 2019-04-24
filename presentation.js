@@ -7,27 +7,37 @@ var rl = readline.createInterface({
 });
 
 var start = () => {
-    console.log("1. Rechercher un collègue par nom");
-    console.log("2. Créer un collègue");
-    console.log("3. Modifier l'email");
-    console.log("4. Modifier la photo");
-    console.log("99. Sortir");
+    console.log(
+        "1. Rechercher un collègue par nom \n"
+        + "2. Créer un collègue \n"
+        + "3. Modifier l'email \n"
+        + "4. Modifier la photo \n"
+        + "99. Sortir \n"
+    );
 
-    rl.question('', function (saisie) {
-
-        console.log(`Votre choix : ${saisie}`);
+    rl.question('Votre choix : ', function (saisie) {
 
         if (saisie == 1) {
             rl.question('Saisissez le nom à rechercher : ', saisieNom => {
                 console.log(`>> Recherche en cours du nom ${saisieNom}`);
                 service.searchByName(saisieNom, (tableauCollegue) => {
+
                     tableauCollegue.forEach(collegue => {
-                        console.log(`${collegue.nom } ${collegue.prenoms } (${collegue.dateDeNaissance})`);
+                        console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance})`);
                     });
+
                     start();
+
+                }, (messageErr) => {
+
+                    console.log('OOps :', messageErr);
+
+                    start();
+
                 });
-                
+
             });
+
         } else if (saisie == 2) {
 
             var collegue = {
@@ -44,10 +54,11 @@ var start = () => {
                 start();
             });
 
-
         } else if (saisie == 99) {
+
             console.log("Aurevoir");
             rl.close();
+            
         }
 
     });
