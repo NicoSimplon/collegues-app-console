@@ -1,4 +1,4 @@
-var request = require('request');
+const request = require('request-promise-native');
 
 function rechercherColleguesParNom(nomRecherche, callbackOK, callbackKO) {
 
@@ -18,15 +18,15 @@ function rechercherColleguesParNom(nomRecherche, callbackOK, callbackKO) {
 
         } else {
 
-            var tableauMatriculesTrouves = body;
+            let tableauMatriculesTrouves = body;
 
-            var trouverCollegue = (tabMats, tabResultats) => {
+            let trouverCollegue = (tabMats, tabResultats) => {
 
                 if (tabMats.length === 0) {
                     callbackOK([]);
                 }
 
-                var matricule = tabMats.pop();
+                let matricule = tabMats.pop();
 
                 rechercherColleguesParMatricule(matricule, (collegueTrouve) => {
                     tabResultats.push(collegueTrouve);
@@ -50,7 +50,7 @@ function rechercherColleguesParMatricule(matricule, callback) {
 
     request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true }, (err, res, body) => {
 
-        var colleguesTrouve = body;
+        let colleguesTrouve = body;
         callback(colleguesTrouve);
 
     });
@@ -81,7 +81,7 @@ function creerUnCollegue(collegue, callbackOK, callbackKO) {
     
         } else {
         
-            var collegueCree = body;
+            let collegueCree = body;
             callbackOK(collegueCree);
 
         }
@@ -113,7 +113,7 @@ function modifierEmailCollegue(matricule, email, callbackOK, callbackKO) {
     
         } else {
         
-            var collegueModifie = body;
+            let collegueModifie = body;
             callbackOK(collegueModifie);
 
         }
@@ -145,7 +145,7 @@ function modifierPhotoUrlCollegue(matricule, url, callbackOK, callbackKO) {
     
         } else {
         
-            var collegueModifie = body;
+            let collegueModifie = body;
             callbackOK(collegueModifie);
 
         }

@@ -1,12 +1,14 @@
-var readline = require('readline');
-var service = require('./service.js');
+const readline = require('readline');
+const service = require('./service.js');
 
-var rl = readline.createInterface({
+const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-var start = () => {
+const start = () => {
+    
+    // Le template de string n'a pas été utilisé afin de garder un code propre
     console.log(
         "1. Rechercher un collègue par nom \n"
         + "2. Créer un collègue \n"
@@ -80,8 +82,8 @@ var start = () => {
 
         } else if (saisie == 3) {
 
-            var matricule = {};
-            var email = {};
+            let matricule = {};
+            let email = {};
 
             rl.question('Saisissez le matricule du collègue à modifier : ', matriculeSaisi => {
                 matricule.matricule = matriculeSaisi;
@@ -108,8 +110,8 @@ var start = () => {
 
         } else if (saisie == 4) {
 
-            var matricule = {};
-            var url = {};
+            let matricule = {};
+            let url = {};
 
             rl.question('Saisissez le matricule du collègue à modifier : ', matriculeSaisi => {
                 matricule.matricule = matriculeSaisi;
