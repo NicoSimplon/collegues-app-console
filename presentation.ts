@@ -1,7 +1,7 @@
-const readline = require('readline');
-const {Service} = require('./service.js');
+import * as readline from 'readline';
+import {Service} from './service';
 
-const service = new Service();
+const service:Service = new Service();
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -19,9 +19,9 @@ const start = () => {
         + "99. Sortir \n"
     );
 
-    rl.question('Votre choix : ', function (saisie) {
+    rl.question('Votre choix : ', (saisie:string) => {
 
-        if (saisie == 1) {
+        if (saisie == '1') {
 
             rl.question('Saisissez le nom à rechercher : ', saisieNom => {
 
@@ -29,34 +29,34 @@ const start = () => {
 
                 service.rechercherColleguesParNom(saisieNom)
                     .then((tableauCollegue) => {
-                        tableauCollegue.forEach(collegue => {
+                        tableauCollegue.forEach((collegue:any):void => {
                             console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance}) => matricule: ${collegue.matricule}`);
                         });
                         start();
                     })
-                    .catch((err) => {
+                    .catch((err:Error) => {
                         console.log(`${err}`);
                         start();
                     });
             });
 
-        } else if (saisie == 2) {
+        } else if (saisie == '2') {
 
-            var collegue = {};
+            let collegue:any = {};
 
-            rl.question('Saisissez le nom du nouveau collègue : ', nomSaisi => {
+            rl.question('Saisissez le nom du nouveau collègue : ', (nomSaisi:string):void => {
                 collegue.nom = nomSaisi;
 
-                rl.question('Saisissez le prénom du nouveau collègue : ', prenomSaisi => {
+                rl.question('Saisissez le prénom du nouveau collègue : ', (prenomSaisi:string):void => {
                     collegue.prenoms = prenomSaisi;
 
-                    rl.question('Saisissez la date de naissance du nouveau collègue (ex: 1988-03-15) : ', dateSaisi => {
+                    rl.question('Saisissez la date de naissance du nouveau collègue (ex: 1988-03-15) : ', (dateSaisi:string):void => {
                         collegue.dateDeNaissance = dateSaisi;
 
-                        rl.question('Saisissez l\'url de la photo du nouveau collègue (ex: http://img.jpg) : ', urlSaisi => {
+                        rl.question('Saisissez l\'url de la photo du nouveau collègue (ex: http://img.jpg) : ', (urlSaisi:string):void => {
                             collegue.photoUrl = urlSaisi;
 
-                            rl.question('Saisissez l\'email du nouveau collègue (ex: mail@mail.com) : ', emailSaisi => {
+                            rl.question('Saisissez l\'email du nouveau collègue (ex: mail@mail.com) : ', (emailSaisi:string):void => {
                                 collegue.email = emailSaisi;
                                 
                                 service.creerUnCollegue(collegue)
@@ -66,7 +66,7 @@ const start = () => {
                                             console.log(collegueRecup);
                                             start();
                                         })
-                                    .catch((err) => {
+                                    .catch((err:Error) => {
                                         console.log(`${err}`);
                                         start();
                                     });
@@ -76,50 +76,24 @@ const start = () => {
                 });
             });
 
-        } else if (saisie == 3) {
+        } else if (saisie == '3') {
 
-            let matricule = {};
-            let email = {};
+            let matricule:any = {};
+            let email:any = {};
 
-            rl.question('Saisissez le matricule du collègue à modifier : ', matriculeSaisi => {
+            rl.question('Saisissez le matricule du collègue à modifier : ', (matriculeSaisi:string):void => {
                 matricule.matricule = matriculeSaisi;
 
-                rl.question('Saisissez le nouvel email du collègue : ', emailSaisi => {
+                rl.question('Saisissez le nouvel email du collègue : ', (emailSaisi:string):void => {
                     email.email = emailSaisi;
 
                     service.modifierEmailCollegue(matricule.matricule, email)
-                    .then( collegueModifie => {
-                        console.log("Votre email a bien été modifié:");
-                        console.log(collegueModifie);
-                        start();
-                    })
-                    .catch((err) => {
-                        console.log(`${err}`);
-                        start();
-                    });
-
-                });
-
-            });
-
-        } else if (saisie == 4) {
-
-            let matricule = {};
-            let url = {};
-
-            rl.question('Saisissez le matricule du collègue à modifier : ', matriculeSaisi => {
-                matricule.matricule = matriculeSaisi;
-
-                rl.question('Saisissez le nouvel url de la photo du collègue : ', urlSaisi => {
-                    url.photoUrl = urlSaisi;
-
-                    service.modifierPhotoUrlCollegue(matricule.matricule, url)
-                        .then( collegueModifie => {
-                            console.log("Votre photo a bien été modifié:");
+                        .then(collegueModifie => {
+                            console.log("Votre email a bien été modifié:");
                             console.log(collegueModifie);
                             start();
                         })
-                        .catch((err) => {
+                        .catch((err:Error) => {
                             console.log(`${err}`);
                             start();
                         });
@@ -128,7 +102,33 @@ const start = () => {
 
             });
 
-        } else if (saisie == 99) {
+        } else if (saisie == '4') {
+
+            let matricule:any = {};
+            let url:any = {};
+
+            rl.question('Saisissez le matricule du collègue à modifier : ', (matriculeSaisi:string):void => {
+                matricule.matricule = matriculeSaisi;
+
+                rl.question('Saisissez le nouvel url de la photo du collègue : ', (urlSaisi:string):void => {
+                    url.photoUrl = urlSaisi;
+
+                    service.modifierPhotoUrlCollegue(matricule.matricule, url)
+                        .then(collegueModifie => {
+                            console.log("Votre photo a bien été modifié:");
+                            console.log(collegueModifie);
+                            start();
+                        })
+                        .catch((err:Error) => {
+                            console.log(`${err}`);
+                            start();
+                        });
+
+                });
+
+            });
+
+        } else if (saisie == '99') {
 
             console.log("Aurevoir");
             rl.close();
@@ -144,5 +144,5 @@ const start = () => {
 
 }
 
-exports.run = start;
+export {start};
 
