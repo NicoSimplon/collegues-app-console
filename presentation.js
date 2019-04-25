@@ -35,7 +35,7 @@ const start = () => {
                         start();
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.log(`${err}`);
                         start();
                     });
             });
@@ -67,7 +67,7 @@ const start = () => {
                                             start();
                                         })
                                     .catch((err) => {
-                                        console.log(err);
+                                        console.log(`${err}`);
                                         start();
                                     });
                             });
@@ -94,7 +94,7 @@ const start = () => {
                         start();
                     })
                     .catch((err) => {
-                        console.log(err);
+                        console.log(`${err}`);
                         start();
                     });
 
@@ -120,7 +120,7 @@ const start = () => {
                             start();
                         })
                         .catch((err) => {
-                            console.log(err);
+                            console.log(`${err}`);
                             start();
                         });
 
