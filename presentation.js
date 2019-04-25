@@ -133,6 +133,11 @@ const start = () => {
             console.log("Aurevoir");
             rl.close();
 
+        } else {
+
+            console.log("Veuillez rentrer un choix valide !!!");
+            start();
+
         }
 
     });
