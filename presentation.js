@@ -1,5 +1,5 @@
 const readline = require('readline');
-const {Service} = require('./service.js');
+const { Service } = require('./service.js');
 
 const service = new Service();
 
@@ -9,17 +9,17 @@ const rl = readline.createInterface({
 });
 
 const start = () => {
-    
+
     // Le template de string n'a pas été utilisé afin de garder un code propre
     console.log(
-        "1. Rechercher un collègue par nom \n"
-        + "2. Créer un collègue \n"
-        + "3. Modifier l'email \n"
-        + "4. Modifier la photo \n"
-        + "99. Sortir \n"
+        "1. Rechercher un collègue par nom \n" +
+        "2. Créer un collègue \n" +
+        "3. Modifier l'email \n" +
+        "4. Modifier la photo \n" +
+        "99. Sortir \n"
     );
 
-    rl.question('Votre choix : ', function (saisie) {
+    rl.question('Votre choix : ', function(saisie) {
 
         if (saisie == 1) {
 
@@ -42,7 +42,7 @@ const start = () => {
 
         } else if (saisie == 2) {
 
-            var collegue = {};
+            let collegue = {};
 
             rl.question('Saisissez le nom du nouveau collègue : ', nomSaisi => {
                 collegue.nom = nomSaisi;
@@ -58,7 +58,7 @@ const start = () => {
 
                             rl.question('Saisissez l\'email du nouveau collègue (ex: mail@mail.com) : ', emailSaisi => {
                                 collegue.email = emailSaisi;
-                                
+
                                 service.creerUnCollegue(collegue)
                                     .then(
                                         (collegueRecup) => {
@@ -88,15 +88,15 @@ const start = () => {
                     email.email = emailSaisi;
 
                     service.modifierEmailCollegue(matricule.matricule, email)
-                    .then( collegueModifie => {
-                        console.log("Votre email a bien été modifié:");
-                        console.log(collegueModifie);
-                        start();
-                    })
-                    .catch((err) => {
-                        console.log(`${err}`);
-                        start();
-                    });
+                        .then(collegueModifie => {
+                            console.log("Votre email a bien été modifié:");
+                            console.log(collegueModifie);
+                            start();
+                        })
+                        .catch((err) => {
+                            console.log(`${err}`);
+                            start();
+                        });
 
                 });
 
@@ -114,7 +114,7 @@ const start = () => {
                     url.photoUrl = urlSaisi;
 
                     service.modifierPhotoUrlCollegue(matricule.matricule, url)
-                        .then( collegueModifie => {
+                        .then(collegueModifie => {
                             console.log("Votre photo a bien été modifié:");
                             console.log(collegueModifie);
                             start();
@@ -145,4 +145,3 @@ const start = () => {
 }
 
 exports.run = start;
-
