@@ -103,11 +103,9 @@ class TripService {
 
     constructor() {
         this.setOfTrip = new Set();
-        this.setOfTrip.add(
-            new Trip('paris', 'Paris', 'img/paris.jpg'),
-            new Trip('nantes', 'Nantes', 'img/nantes.jpg'),
-            new Trip('rio-de-janeiro', 'Rio de Janeiro', 'img/rio-de-janeiro.jpg')
-        );
+        this.setOfTrip.add(new Trip('paris', 'Paris', 'img/paris.jpg'));
+        this.setOfTrip.add(new Trip('nantes', 'Nantes', 'img/nantes.jpg'));
+        this.setOfTrip.add(new Trip('rio-de-janeiro', 'Rio de Janeiro', 'img/rio-de-janeiro.jpg'));
     }
 
     findByName(tripName) {
@@ -117,14 +115,12 @@ class TripService {
             setTimeout(() => {
 
                 this.setOfTrip.forEach((trip) => {
-                    
                     if (trip.name === tripName) {
-                        resolve(`Trip found : ${trip.toString()}`);
-                    } else {
-                        reject(`No trip with name ${tripName}`);
+                        resolve(trip);
                     } 
-
                 });
+
+                reject(`No trip with name ${tripName}`);
 
             }, 2000)
         });
@@ -147,7 +143,7 @@ class PriceService {
             setTimeout(() => {
 
                 if(this.priceMap.get(tripId)) {
-                    resolve(`Price found : ${this.priceMap.get(tripId).toString()}`);
+                    resolve(this.priceMap.get(tripId));
                 } else {
                     reject(`No price for trip id ${tripId}`);
                 }
@@ -161,17 +157,27 @@ const tripService = new TripService();
 const priceService = new PriceService();
 
 tripService.findByName("Paris")
-    .then((message) => {
-        console.log(message);
+    .then((trip) => {
+        console.log(`Trip found : ${trip.toString()}`);
     })
     .catch((error) => {
         console.log(error);
     });
 
-priceService.findPriceByTripId("rio-de-janeiro")
-    .then((message) => {
-        console.log(message);
+tripService.findByName("Toulouse")
+    .then((trip) => {
+        console.log(`Trip found : ${trip.toString()}`);
     })
     .catch((error) => {
         console.log(error);
     });
+
+tripService.findByName('Rio de Janeiro')
+    .then(trip => priceService.findPriceByTripId(trip.id))
+    .then(price => console.log(`Price Found : ${price}`))
+    .catch(err => console.log(err));
+
+tripService.findByName('Nantes')
+    .then(trip => priceService.findPriceByTripId(trip.id))
+    .then(price => console.log(`Price Found : ${price}`))
+    .catch(err => console.log(err));

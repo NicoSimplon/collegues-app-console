@@ -1,160 +1,58 @@
 const request = require('request-promise-native');
 
-function rechercherColleguesParNom(nomRecherche, callbackOK, callbackKO) {
+class Service {
 
-    request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true }, (err, res, body) => {
+    rechercherColleguesParNom(nomRecherche) {
 
-        if (err) {
-
-            callbackKO('Serveur indisponible');
-
-        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
-
-            callbackKO('Erreur dans les informations de la requête');
-
-        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
-
-            callbackKO('Erreur côté serveur');
-
-        } else {
-
-            let tableauMatriculesTrouves = body;
-
-            let trouverCollegue = (tabMats, tabResultats) => {
-
-                if (tabMats.length === 0) {
-                    callbackOK([]);
-                }
-
-                let matricule = tabMats.pop();
-
-                rechercherColleguesParMatricule(matricule, (collegueTrouve) => {
-                    tabResultats.push(collegueTrouve);
-
-                    if (tabMats.length > 0) {
-                        trouverCollegue(tabMats, tabResultats);
-                    } else {
-                        callbackOK(tabResultats);
-                    }
+        return request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true })
+            .then(
+                (tableauMatricule) => {
+                    let tableauPromises = tableauMatricule.map((matricule) => this.rechercherColleguesParMatricule(matricule));
+                    return Promise.all(tableauPromises);
                 });
+    }
 
+    rechercherColleguesParMatricule(matricule) {
+
+        return request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true });
+    }
+
+    creerUnCollegue(collegue) {
+
+        return request(
+            {
+                url: `https://nicolas-collegues-api.herokuapp.com/collegues`,
+                method: 'POST',
+                json: true,
+                body: collegue,
             }
+        );
+    }
 
-            trouverCollegue(tableauMatriculesTrouves, []);
-
-        }
-    });
-}
-
-function rechercherColleguesParMatricule(matricule, callback) {
-
-    request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true }, (err, res, body) => {
-
-        let colleguesTrouve = body;
-        callback(colleguesTrouve);
-
-    });
-}
-
-function creerUnCollegue(collegue, callbackOK, callbackKO) {
-
-    request(
-        {
-            url: `https://nicolas-collegues-api.herokuapp.com/collegues`,
-            method: 'POST',
-            json: true,
-            body: collegue,
-        }, 
-        (err, res, body) => {
-
-        if (err) {
-
-            callbackKO('Serveur indisponible');
-    
-        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
-    
-            callbackKO('Erreur dans les informations de la requête');
-    
-        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
-    
-            callbackKO('Erreur côté serveur');
-    
-        } else {
+    modifierEmailCollegue(matricule, email) {
         
-            let collegueCree = body;
-            callbackOK(collegueCree);
+        return request(
+            {
+                url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
+                method: 'PATCH',
+                json: true,
+                body: email,
+            }
+        );
+    }
 
-        }
+    modifierPhotoUrlCollegue(matricule, url) {
+        request(
+            {
+                url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
+                method: 'PATCH',
+                json: true,
+                body: url,
+            }
+        );
+    }
 
-    });
 }
 
-function modifierEmailCollegue(matricule, email, callbackOK, callbackKO) {
-    request(
-        {
-            url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
-            method: 'PATCH',
-            json: true,
-            body: email,
-        }, 
-        (err, res, body) => {
-
-        if (err) {
-
-            callbackKO('Serveur indisponible');
-    
-        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
-    
-            callbackKO('Erreur dans les informations de la requête');
-    
-        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
-    
-            callbackKO('Erreur côté serveur');
-    
-        } else {
-        
-            let collegueModifie = body;
-            callbackOK(collegueModifie);
-
-        }
-
-    });
-}
-
-function modifierPhotoUrlCollegue(matricule, url, callbackOK, callbackKO) {
-    request(
-        {
-            url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
-            method: 'PATCH',
-            json: true,
-            body: url,
-        }, 
-        (err, res, body) => {
-
-        if (err) {
-
-            callbackKO('Serveur indisponible');
-    
-        } else if (res.statusCode >= 400 && res.statusCode <= 499) {
-    
-            callbackKO('Erreur dans les informations de la requête');
-    
-        } else if (res.statusCode >= 500 && res.statusCode <= 599) {
-    
-            callbackKO('Erreur côté serveur');
-    
-        } else {
-        
-            let collegueModifie = body;
-            callbackOK(collegueModifie);
-
-        }
-
-    });
-}
-
-exports.searchByName = rechercherColleguesParNom;
-exports.creerCollegue = creerUnCollegue;
-exports.modifEmail = modifierEmailCollegue;
-exports.modifPhoto = modifierPhotoUrlCollegue;
+exports.Service = Service;
 

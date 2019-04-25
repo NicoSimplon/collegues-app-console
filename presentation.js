@@ -1,5 +1,7 @@
 const readline = require('readline');
-const service = require('./service.js');
+const {Service} = require('./service.js');
+
+const service = new Service();
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -20,24 +22,22 @@ const start = () => {
     rl.question('Votre choix : ', function (saisie) {
 
         if (saisie == 1) {
+
             rl.question('Saisissez le nom à rechercher : ', saisieNom => {
+
                 console.log(`>> Recherche en cours du nom ${saisieNom}`);
-                service.searchByName(saisieNom, (tableauCollegue) => {
 
-                    tableauCollegue.forEach(collegue => {
-                        console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance}) => matricule: ${collegue.matricule}`);
+                service.rechercherColleguesParNom(saisieNom)
+                    .then((tableauCollegue) => {
+                        tableauCollegue.forEach(collegue => {
+                            console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance}) => matricule: ${collegue.matricule}`);
+                        });
+                        start();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        start();
                     });
-
-                    start();
-
-                }, (messageErr) => {
-
-                    console.log('OOps :', messageErr);
-
-                    start();
-
-                });
-
             });
 
         } else if (saisie == 2) {
@@ -59,21 +59,17 @@ const start = () => {
                             rl.question('Saisissez l\'email du nouveau collègue (ex: mail@mail.com) : ', emailSaisi => {
                                 collegue.email = emailSaisi;
                                 
-                                service.creerCollegue(collegue,
-                                    (collegueRecup) => {
-                                        console.log("Votre collègue a bien été créé:");
-                                        console.log(collegueRecup);
+                                service.creerUnCollegue(collegue)
+                                    .then(
+                                        (collegueRecup) => {
+                                            console.log("Votre collègue a bien été créé:");
+                                            console.log(collegueRecup);
+                                            start();
+                                        })
+                                    .catch((err) => {
+                                        console.log(err);
                                         start();
-                                    },
-                                    (messageErr) => {
-
-                                        console.log('OOps :', messageErr);
-                    
-                                        start();
-                    
-                                    }  
-                                );
-
+                                    });
                             });
                         });
                     });
@@ -91,17 +87,15 @@ const start = () => {
                 rl.question('Saisissez le nouvel email du collègue : ', emailSaisi => {
                     email.email = emailSaisi;
 
-                    service.modifEmail(matricule.matricule, email, (collegueModifie) => {
+                    service.modifierEmailCollegue(matricule.matricule, email)
+                    .then( collegueModifie => {
                         console.log("Votre email a bien été modifié:");
                         console.log(collegueModifie);
                         start();
-                    },
-                    (messageErr) => {
-
-                        console.log('OOps :', messageErr);
-    
+                    })
+                    .catch((err) => {
+                        console.log(err);
                         start();
-    
                     });
 
                 });
@@ -119,18 +113,16 @@ const start = () => {
                 rl.question('Saisissez le nouvel url de la photo du collègue : ', urlSaisi => {
                     url.photoUrl = urlSaisi;
 
-                    service.modifPhoto(matricule.matricule, url, (collegueModifie) => {
-                        console.log("Votre photo a bien été modifié:");
-                        console.log(collegueModifie);
-                        start();
-                    },
-                    (messageErr) => {
-
-                        console.log('OOps :', messageErr);
-    
-                        start();
-    
-                    });
+                    service.modifierPhotoUrlCollegue(matricule.matricule, url)
+                        .then( collegueModifie => {
+                            console.log("Votre photo a bien été modifié:");
+                            console.log(collegueModifie);
+                            start();
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            start();
+                        });
 
                 });
 
