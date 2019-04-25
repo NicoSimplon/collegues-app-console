@@ -1,5 +1,6 @@
 import * as readline from 'readline';
 import {Service} from './service';
+import { Collegue } from './domains';
 
 const service:Service = new Service();
 
@@ -23,7 +24,7 @@ const start = () => {
 
         if (saisie == '1') {
 
-            rl.question('Saisissez le nom à rechercher : ', saisieNom => {
+            rl.question('Saisissez le nom à rechercher : ', (saisieNom:string):void => {
 
                 console.log(`>> Recherche en cours du nom ${saisieNom}`);
 
