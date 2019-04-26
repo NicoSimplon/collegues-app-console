@@ -1,4 +1,5 @@
-export class Collegue {
+export class CollegueDTO {
+
     nom:string;
     prenoms:string;
     dateDeNaissance:string;
@@ -13,7 +14,16 @@ export class Collegue {
         this.email = email;
     }
 
-    toString():string {
-        return `${this.nom} ${this.prenoms} (${this.dateDeNaissance}) - ${this.email} / ${this.photoUrl}`;
-    }
 }
+
+export class Collegue extends CollegueDTO {
+
+    matricule:string;
+
+    constructor(matricule:string, nom:string, prenoms:string, dateDeNaissance:string, photoUrl:string, email:string) {
+        super(nom, prenoms, dateDeNaissance, photoUrl, email);
+        this.matricule = matricule;
+    }
+
+}
+

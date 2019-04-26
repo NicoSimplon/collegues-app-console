@@ -9,6 +9,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const readline = __importStar(require("readline"));
 const service_1 = require("./service");
+const domains_1 = require("./domains");
 const service = new service_1.Service();
 const rl = readline.createInterface({
     input: process.stdin,
@@ -23,7 +24,7 @@ const start = () => {
         + "99. Sortir \n");
     rl.question('Votre choix : ', (saisie) => {
         if (saisie == '1') {
-            rl.question('Saisissez le nom à rechercher : ', saisieNom => {
+            rl.question('Saisissez le nom à rechercher : ', (saisieNom) => {
                 console.log(`>> Recherche en cours du nom ${saisieNom}`);
                 service.rechercherColleguesParNom(saisieNom)
                     .then((tableauCollegue) => {
@@ -39,7 +40,7 @@ const start = () => {
             });
         }
         else if (saisie == '2') {
-            let collegue = {};
+            let collegue = new domains_1.CollegueDTO("", "", "", "", "");
             rl.question('Saisissez le nom du nouveau collègue : ', (nomSaisi) => {
                 collegue.nom = nomSaisi;
                 rl.question('Saisissez le prénom du nouveau collègue : ', (prenomSaisi) => {
@@ -74,7 +75,7 @@ const start = () => {
                 rl.question('Saisissez le nouvel email du collègue : ', (emailSaisi) => {
                     email.email = emailSaisi;
                     service.modifierEmailCollegue(matricule.matricule, email)
-                        .then(collegueModifie => {
+                        .then((collegueModifie) => {
                         console.log("Votre email a bien été modifié:");
                         console.log(collegueModifie);
                         start();
@@ -94,7 +95,7 @@ const start = () => {
                 rl.question('Saisissez le nouvel url de la photo du collègue : ', (urlSaisi) => {
                     url.photoUrl = urlSaisi;
                     service.modifierPhotoUrlCollegue(matricule.matricule, url)
-                        .then(collegueModifie => {
+                        .then((collegueModifie) => {
                         console.log("Votre photo a bien été modifié:");
                         console.log(collegueModifie);
                         start();

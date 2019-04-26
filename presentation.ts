@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import {Service} from './service';
-import { Collegue } from './domains';
+import { Collegue, CollegueDTO } from './domains';
 
 const service:Service = new Service();
 
@@ -9,7 +9,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-const start = () => {
+const start = ():void => {
     
     // Le template de string n'a pas été utilisé afin de garder un code propre
     console.log(
@@ -29,8 +29,8 @@ const start = () => {
                 console.log(`>> Recherche en cours du nom ${saisieNom}`);
 
                 service.rechercherColleguesParNom(saisieNom)
-                    .then((tableauCollegue) => {
-                        tableauCollegue.forEach((collegue:any):void => {
+                    .then((tableauCollegue:Collegue[]) => {
+                        tableauCollegue.forEach((collegue:Collegue):void => {
                             console.log(`${collegue.nom} ${collegue.prenoms} (${collegue.dateDeNaissance}) => matricule: ${collegue.matricule}`);
                         });
                         start();
@@ -43,7 +43,7 @@ const start = () => {
 
         } else if (saisie == '2') {
 
-            let collegue:any = {};
+            let collegue:CollegueDTO = new CollegueDTO("", "", "", "", "");
 
             rl.question('Saisissez le nom du nouveau collègue : ', (nomSaisi:string):void => {
                 collegue.nom = nomSaisi;
@@ -62,7 +62,7 @@ const start = () => {
                                 
                                 service.creerUnCollegue(collegue)
                                     .then(
-                                        (collegueRecup) => {
+                                        (collegueRecup:Collegue):void => {
                                             console.log("Votre collègue a bien été créé:");
                                             console.log(collegueRecup);
                                             start();
@@ -89,7 +89,7 @@ const start = () => {
                     email.email = emailSaisi;
 
                     service.modifierEmailCollegue(matricule.matricule, email)
-                        .then(collegueModifie => {
+                        .then((collegueModifie:Collegue):void => {
                             console.log("Votre email a bien été modifié:");
                             console.log(collegueModifie);
                             start();
@@ -115,7 +115,7 @@ const start = () => {
                     url.photoUrl = urlSaisi;
 
                     service.modifierPhotoUrlCollegue(matricule.matricule, url)
-                        .then(collegueModifie => {
+                        .then((collegueModifie:Collegue):void => {
                             console.log("Votre photo a bien été modifié:");
                             console.log(collegueModifie);
                             start();

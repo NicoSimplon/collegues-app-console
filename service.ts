@@ -1,5 +1,5 @@
 import request from 'request-promise-native';
-import { Collegue } from './domains';
+import { CollegueDTO } from './domains';
 
 export class Service {
 
@@ -7,7 +7,7 @@ export class Service {
 
         return request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true })
             .then(
-                (tableauMatricule:any) => {
+                (tableauMatricule:string[]) => {
                     let tableauPromises = tableauMatricule.map((matricule:string) => this.rechercherColleguesParMatricule(matricule));
                     return Promise.all(tableauPromises);
                 });
@@ -18,7 +18,7 @@ export class Service {
         return request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true });
     }
 
-    creerUnCollegue(collegue:Collegue) {
+    creerUnCollegue(collegue:CollegueDTO) {
 
         return request(
             {
