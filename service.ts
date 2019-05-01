@@ -1,23 +1,24 @@
-const request = require('request-promise-native');
+import request from 'request-promise-native';
+import { CollegueDTO } from './domains';
 
-class Service {
+export class Service {
 
-    rechercherColleguesParNom(nomRecherche) {
+    rechercherColleguesParNom(nomRecherche:string) {
 
         return request(`https://nicolas-collegues-api.herokuapp.com/collegues?nom=${nomRecherche}`, { json: true })
             .then(
-                (tableauMatricule) => {
-                    let tableauPromises = tableauMatricule.map((matricule) => this.rechercherColleguesParMatricule(matricule));
+                (tableauMatricule:string[]) => {
+                    let tableauPromises = tableauMatricule.map((matricule:string) => this.rechercherColleguesParMatricule(matricule));
                     return Promise.all(tableauPromises);
                 });
     }
 
-    rechercherColleguesParMatricule(matricule) {
+    rechercherColleguesParMatricule(matricule:string) {
 
         return request(`https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`, { json: true });
     }
 
-    creerUnCollegue(collegue) {
+    creerUnCollegue(collegue:CollegueDTO) {
 
         return request(
             {
@@ -29,7 +30,7 @@ class Service {
         );
     }
 
-    modifierEmailCollegue(matricule, email) {
+    modifierEmailCollegue(matricule:string, email:string) {
         
         return request(
             {
@@ -41,8 +42,9 @@ class Service {
         );
     }
 
-    modifierPhotoUrlCollegue(matricule, url) {
-        request(
+    modifierPhotoUrlCollegue(matricule:string, url:string) {
+
+        return request(
             {
                 url: `https://nicolas-collegues-api.herokuapp.com/collegues/${matricule}`,
                 method: 'PATCH',
@@ -53,6 +55,3 @@ class Service {
     }
 
 }
-
-exports.Service = Service;
-
